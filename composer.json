@@ -1,0 +1,22 @@
+{
+    "name": "jackal/giffhanger",
+    "type": "project",
+    "authors": [
+        {
+            "name": "Luca Giacalone",
+            "email": "luca.giacalone@edimotive.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Jackal\\": "src/"
+        }
+    },
+    "require": {
+        "php-ffmpeg/php-ffmpeg": "^0.14.0",
+        "jackal/image-merge": "^0.4.1",
+        "athlon1600/youtube-downloader": "^2.0",
+        "ext-curl": "*",
+        "symfony/console": "^5.0"
+    }
+}
