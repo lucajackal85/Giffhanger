@@ -46,7 +46,17 @@ class YoutubeDownloader implements DownloaderInterface {
     }
 
     public function download($destinationFile){
+        if(!is_dir(dirname($destinationFile))){
+            if(!mkdir(dirname($destinationFile),0777,true)){
+                throw new \Exception('Unable to create directory '.dirname($destinationFile));
+            }
+        }
 
-        return file_put_contents($destinationFile,file_get_contents($this->getURL()));
+        $tempFile = $destinationFile.'.temp';
+        if(!is_file($tempFile)) {
+            file_put_contents($tempFile, (new \DateTime('now'))->format('Y-m-d H:i:s'));
+            file_put_contents($destinationFile, file_get_contents($this->getURL()));
+            unlink($tempFile);
+        }
     }
 }

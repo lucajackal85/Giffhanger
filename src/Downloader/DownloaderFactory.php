@@ -8,6 +8,12 @@ class DownloaderFactory
 {
     const TYPE_YOUTUBE = 'youtube';
 
+    /**
+     * @param $videoType
+     * @param $id
+     * @return YoutubeDownloader
+     * @throws \Exception
+     */
     public static function getInstance($videoType,$id)
     {
         switch ($videoType) {

@@ -1,15 +1,13 @@
 <?php
 
-//https://superuser.com/questions/556029/how-do-i-convert-a-video-to-gif-using-ffmpeg-with-reasonable-quality
-
 use Jackal\Downloader\DownloaderFactory;
+use Jackal\Giffhanger\Giffhanger;
 use \Symfony\Component\Console\Output\ConsoleOutput;
-use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Process\Process;
 
 require 'vendor/autoload.php';
 
-$youtubeVideoId = 'H-0UGyseHvE';
+$youtubeVideoId = '8SAY4UR4UR8';
 
 $tmpFolder = __DIR__.'/videos/';
 
@@ -30,40 +28,19 @@ if(!is_file($fileName)) {
 
 $output->writeln('Done!');
 
+$giffhanger = new Giffhanger($fileName,[
+    'temp_dir' => __DIR__.'/temp'
+]);
 
-$numberOfGif = 3;
+$numberOfFrames = 3;
+$duration = 6;
+$dimentionWidth = 320;
 
-$output->write('Creating GIF ('.$numberOfGif.' frames)... ');
-$ffmpeg = new \Jackal\FFMpeg\FFMpeg($fileName);
-$duration = $ffmpeg->getDuration();
+$output->write('Creating GIF ('.$numberOfFrames.' frames)... ');
 
-$files = [];
-for($i=1;$i<=$numberOfGif;$i++){
-    $point = (($duration / $numberOfGif) - ($duration / $numberOfGif / 2)) * $i;
-    $filename = __DIR__.'/output'.$i.'.gif';
-    $ffmpeg->createGif($filename,$point);
-    $files[] = $filename;
-}
+$giffhanger->generateGIF(__DIR__.'/output.gif',$numberOfFrames,$duration,$dimentionWidth);
+//$giffhanger->generateVideo(__DIR__.'/output.avi',$numberOfFrames,$duration,$dimentionWidth);
 
-if($numberOfGif > 1) {
-    $cmd = 'gifsicle --merge ' . implode(' ', $files) . ' -o output.gif';
 
-    $p = Process::fromShellCommandline($cmd);
-    $p->run();
-
-    if ($p->getErrorOutput()) {
-        throw new \Exception($p->getErrorOutput());
-    }
-
-    foreach ($files as $file) {
-        if (is_file($file)) {
-            unlink($file);
-        }
-    }
-}else{
-    copy('output1.gif','output.gif');
-    unlink('output1.gif');
-}
-$output->writeln('Done!');
 
 
