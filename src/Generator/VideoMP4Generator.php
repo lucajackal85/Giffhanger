@@ -26,7 +26,7 @@ class VideoMP4Generator extends BaseGenerator
         foreach ($this->cutPoints as $k => $cutPoint){
             $video->filters()->clip(
                 TimeCode::fromSeconds($cutPoint),
-                TimeCode::fromSeconds(round($this->totalDuration / count($this->cutPoints)))
+                TimeCode::fromSeconds($this->totalDuration / count($this->cutPoints))
             );
             $file = $this->tempFolder.'/'.md5($this->sourceFile).'_'.($k+1).'.avi';
             $video->filters()->resize(new Dimension($this->dimentionWidth, round($this->dimentionWidth / $this->getRatio())));
@@ -35,17 +35,20 @@ class VideoMP4Generator extends BaseGenerator
             $files[] = $file;
 
             $this->tempFilesToRemove[] = $file;
-
         }
 
-        $video = $ffmpeg->open($files[0]);
+        if(count($files) > 1) {
+            $video = $ffmpeg->open($files[0]);
 
-        if(is_file($this->destination)){
-            unlink($this->destination);
+            if (is_file($this->destination)) {
+                unlink($this->destination);
+            }
+            $video
+                ->concat(array_slice($files, 0, count($files)))
+                ->saveFromSameCodecs($this->destination);
+        }else{
+            rename($files[0],$this->destination);
         }
-        $video
-            ->concat(array_slice($files,0,count($files)))
-            ->saveFromSameCodecs($this->destination);
     }
 
     public function __destruct()

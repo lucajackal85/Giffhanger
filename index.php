@@ -39,7 +39,7 @@ $dimentionWidth = 320;
 $output->write('Creating GIF ('.$numberOfFrames.' frames)... ');
 
 $giffhanger->generateGIF(__DIR__.'/output.gif',$numberOfFrames,$duration,$dimentionWidth);
-//$giffhanger->generateVideo(__DIR__.'/output.avi',$numberOfFrames,$duration,$dimentionWidth);
+$giffhanger->generateVideo(__DIR__.'/output.avi',$numberOfFrames,$duration,$dimentionWidth);
 
 
 
