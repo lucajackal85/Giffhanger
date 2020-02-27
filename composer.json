@@ -17,6 +17,7 @@
         "jackal/image-merge": "^0.4.1",
         "athlon1600/youtube-downloader": "^2.0",
         "ext-curl": "*",
-        "symfony/console": "^5.0"
+        "symfony/console": "^5.0",
+        "symfony/options-resolver": "^5.0"
     }
 }

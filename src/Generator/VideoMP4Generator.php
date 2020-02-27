@@ -16,43 +16,41 @@ class VideoMP4Generator extends BaseGenerator
     public function generate()
     {
         $videoFormat = new X264();
-        $videoFormat->setKiloBitrate(200);
+        $videoFormat->setKiloBitrate($this->getVideoBitrate());
+        $videoFormat->setPasses(1);
 
         $ffmpeg = FFMpeg::create();
-
         $video = $ffmpeg->open($this->sourceFile);
 
         $files = [];
         foreach ($this->cutPoints as $k => $cutPoint){
+            $partFile = $this->getTempFolder().'/'.md5($this->sourceFile).'_'.($k+1).'.avi';
+
             $video->filters()->clip(
                 TimeCode::fromSeconds($cutPoint),
-                TimeCode::fromSeconds($this->totalDuration / count($this->cutPoints))
+                TimeCode::fromSeconds($this->getOutputDuration() / count($this->cutPoints))
             );
-            $file = $this->tempFolder.'/'.md5($this->sourceFile).'_'.($k+1).'.avi';
-            $video->filters()->resize(new Dimension($this->dimentionWidth, round($this->dimentionWidth / $this->getRatio())));
-            $video->filters()->framerate(new FrameRate(10),1);
-            $video->save($videoFormat,$file);
-            $files[] = $file;
 
-            $this->tempFilesToRemove[] = $file;
+            $video->filters()->resize(new Dimension($this->getDimensionWidth(), round($this->getDimensionWidth() / $this->getRatio())));
+            $video->filters()->framerate(new FrameRate($this->getFrameRate()), 1);
+            $video->save($videoFormat, $partFile);
+
+            $files[] = $partFile;
+            $this->addTempFileToRemove($partFile);
         }
 
-        if(count($files) > 1) {
-            $video = $ffmpeg->open($files[0]);
-
-            if (is_file($this->destination)) {
-                unlink($this->destination);
-            }
-            $video
-                ->concat(array_slice($files, 0, count($files)))
-                ->saveFromSameCodecs($this->destination);
-        }else{
+        if(count($files) == 1) {
             rename($files[0],$this->destination);
+            return;
         }
-    }
 
-    public function __destruct()
-    {
-        parent::__destruct();
+        $video = $ffmpeg->open($files[0]);
+
+        if (is_file($this->destination)) {
+            unlink($this->destination);
+        }
+        $video
+            ->concat(array_slice($files, 0, count($files)))
+            ->saveFromSameCodecs($this->destination);
     }
 }

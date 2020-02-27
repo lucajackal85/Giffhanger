@@ -3,13 +3,8 @@
 
 namespace Jackal\Giffhanger;
 
-
-use FFMpeg\Coordinate\Dimension;
-use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\FFMpeg;
 use Jackal\Generator\GifGenerator;
 use Jackal\Generator\VideoMP4Generator;
-use Symfony\Component\Process\Process;
 
 class Giffhanger
 {
@@ -22,14 +17,14 @@ class Giffhanger
         $this->config = $config;
     }
 
-    public function generateGIF($destinationGIFFile,$numberOfGif = 3, $totalDuration = 6,$dimentionWidth = 640){
+    public function generateGIF($destinationGIFFile){
 
-        $generator = new GifGenerator($this->videoFile,$destinationGIFFile,$numberOfGif,$totalDuration,$dimentionWidth,$this->config);
+        $generator = new GifGenerator($this->videoFile,$destinationGIFFile,$this->config);
         return $generator->generate();
     }
 
-    public function generateVideo($destinationVideoFile,$numberOfGif = 3, $totalDuration = 6,$dimentionWidth = 640){
-        $generator = new VideoMP4Generator($this->videoFile,$destinationVideoFile,$numberOfGif,$totalDuration,$dimentionWidth,$this->config);
+    public function generateVideo($destinationVideoFile){
+        $generator = new VideoMP4Generator($this->videoFile,$destinationVideoFile,$this->config);
         return $generator->generate();
     }
 

@@ -8,20 +8,26 @@ class DownloaderFactory
 {
     const TYPE_YOUTUBE = 'youtube';
 
+    private static $downloaders = [
+        self::TYPE_YOUTUBE => YoutubeDownloader::class
+    ];
+
     /**
-     * @param $videoType
+     * @param $videoTypeOrNamespace
      * @param $id
      * @return YoutubeDownloader
      * @throws \Exception
      */
-    public static function getInstance($videoType,$id)
+    public static function getInstance($videoTypeOrNamespace,$id)
     {
-        switch ($videoType) {
-            case self::TYPE_YOUTUBE :{
-                return new YoutubeDownloader($id,360);
-            }
-            default:
-                throw new \Exception('Invalid video_type ['.$videoType.']');
+        if(class_exists($videoTypeOrNamespace)){
+            return new $videoTypeOrNamespace($id);
         }
+
+        if(!array_keys(self::$downloaders,$videoTypeOrNamespace)){
+            throw new \Exception('Invalid video_type or namespace ['.$videoTypeOrNamespace.']');
+        }
+
+        return new self::$downloaders[$videoTypeOrNamespace]($id);
     }
 }

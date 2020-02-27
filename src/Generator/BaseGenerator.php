@@ -3,72 +3,59 @@
 
 namespace Jackal\Generator;
 
-
-use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use Symfony\Component\OptionsResolver\OptionsResolver;
 
 abstract class BaseGenerator implements GeneratorInterface
 {
     protected $destination;
-    protected $numberOfFrames;
-    protected $totalDuration;
-    protected $dimentionWidth;
     protected $sourceFile;
     protected $cutPoints;
 
-    protected $ffmpeg;
+    protected $options = [];
+    private $tempFilesToRemove = [];
 
-    protected $tempFilesToRemove = [];
-    protected $tempFolder;
-
-    public function __construct($sourceFile, $destionationFile,$numberOfFrames = 3, $totalDuration = 6,$dimentionWidth = 640,$config = [])
+    public function __construct($sourceFile, $destionationFile,$options = [])
     {
-        if(!isset($config['temp_dir'])){
-            $config['temp_dir'] = sys_get_temp_dir();
-        }
+        $resolver = new OptionsResolver();
+        $resolver->setDefaults([
+            'temp_dir' => sys_get_temp_dir(),
+            'output_dimension' => 640,
+            'frames' => 3,
+            'duration' => 6,
+            'bitrate' => 600,
+            'frame_rate' => 10
+        ]);
 
-        $this->tempFolder = $config['temp_dir'];
+        $this->options = $resolver->resolve($options);
 
-        if(!is_dir($this->tempFolder)){
-            if(!mkdir($this->tempFolder,0777,true)){
+        if(!is_dir($this->getTempFolder())){
+            if(!mkdir($this->getTempFolder(),0777,true)){
                 $this->__destruct();
-                throw new \Exception('Cannot create temp folder in path "'.$this->tempFolder.'"');
+                throw new \Exception('Cannot create temp folder in path "'.$this->getTempFolder().'"');
             }
         }
 
         $this->sourceFile = $sourceFile;
         $this->destination = $destionationFile;
-        $this->numberOfFrames = $numberOfFrames;
-        $this->totalDuration = $totalDuration;
-        $this->dimentionWidth = $dimentionWidth;
-
-        $ffmpeg = FFMpeg::create();
-        $this->ffmpeg = $ffmpeg->open($this->sourceFile);
 
         $videoDuration = $this->getDuration();
-        for($i=1;$i<=$this->numberOfFrames;$i++){
-            $this->cutPoints[] = (($videoDuration / $this->numberOfFrames) - ($videoDuration / $this->numberOfFrames / 2)) * $i;
+        for($i=1;$i<=$this->getNumberOfFrames();$i++){
+            $this->cutPoints[] = (($videoDuration / $this->getNumberOfFrames()) - ($videoDuration / $this->getNumberOfFrames() / 2)) * $i;
         }
-
-
     }
 
     protected function getDuration() : int {
-        return $this->ffmpeg->getFFProbe()->format($this->sourceFile)->get('duration');
+        $ffmpeg = FFMpeg::create();
+        $ffmpeg = $ffmpeg->open($this->sourceFile);
+        return $ffmpeg->getFFProbe()->format($this->sourceFile)->get('duration');
     }
 
     protected function getRatio(){
 
-        $frame = $this->tempFolder.'/'.md5($this->sourceFile).'.jpg';
-
-        if(!is_file($frame)) {
-            $this->ffmpeg->frame(TimeCode::fromSeconds(0))->save($frame);
-        }
-        $dimentions = getimagesize($frame);
-        $videoRatio = $dimentions[0] / $dimentions[1];
-        $this->tempFilesToRemove[] = $frame;
-
-        return $videoRatio;
+        $ffmpeg = FFMpeg::create();
+        $ffmpeg = $ffmpeg->open($this->sourceFile);
+        return $ffmpeg->getStreams()->first()->getDimensions()->getRatio()->getValue();
     }
 
     public function __destruct()
@@ -78,5 +65,33 @@ abstract class BaseGenerator implements GeneratorInterface
                 unlink($fileToRemove);
             }
         }
+    }
+
+    protected function addTempFileToRemove($filePath){
+        $this->tempFilesToRemove[] = $filePath;
+    }
+
+    protected function getTempFolder(){
+        return $this->options['temp_dir'];
+    }
+
+    protected function getDimensionWidth(){
+        return $this->options['output_dimension'];
+    }
+
+    protected function getNumberOfFrames(){
+        return $this->options['frames'];
+    }
+
+    protected function getOutputDuration(){
+        return $this->options['duration'];
+    }
+
+    protected function getVideoBitrate(){
+        return $this->options['bitrate'];
+    }
+
+    protected function getFrameRate(){
+        return $this->options['frame_rate'];
     }
 }
