@@ -24,7 +24,7 @@ class DownloaderFactory
             return new $videoTypeOrNamespace($id);
         }
 
-        if(!array_keys(self::$downloaders,$videoTypeOrNamespace)){
+        if(!array_key_exists($videoTypeOrNamespace,self::$downloaders)){
             throw new \Exception('Invalid video_type or namespace ['.$videoTypeOrNamespace.']');
         }
 

@@ -1,4 +1,6 @@
 vendor
 videos
-output.gif
 .idea
+output
+index.php
+temp
