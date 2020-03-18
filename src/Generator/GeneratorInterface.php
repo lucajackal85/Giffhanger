@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jackal\Generator;
+namespace Jackal\Giffhanger\Generator;
 
 
 interface GeneratorInterface

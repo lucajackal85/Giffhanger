@@ -1,7 +1,7 @@
 <?php
 
 
-namespace Jackal\Generator;
+namespace Jackal\Giffhanger\Generator;
 
 use FFMpeg\FFMpeg;
 use Symfony\Component\OptionsResolver\OptionsResolver;

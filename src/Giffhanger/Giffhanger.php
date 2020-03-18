@@ -1,10 +1,10 @@
 <?php
 
 
-namespace Jackal\Giffhanger;
+namespace Jackal\Giffhanger\Giffhanger;
 
-use Jackal\Generator\GifGenerator;
-use Jackal\Generator\VideoMP4Generator;
+use Jackal\Giffhanger\Generator\GifGenerator;
+use Jackal\Giffhanger\Generator\VideoMP4Generator;
 
 class Giffhanger
 {
