@@ -1,6 +1,10 @@
 {
     "name": "jackal/giffhanger",
     "type": "project",
+    "minimum-stability": "dev",
+    "repositories": [
+        { "type": "git", "url": "git@github.com:lucajackal85/Downloader.git" }
+    ],
     "authors": [
         {
             "name": "Luca Giacalone",
@@ -13,11 +17,8 @@
         }
     },
     "require": {
+        "symfony/options-resolver": "^5.0",
         "php-ffmpeg/php-ffmpeg": "^0.14.0",
-        "jackal/image-merge": "^0.4.1",
-        "athlon1600/youtube-downloader": "^2.0",
-        "ext-curl": "*",
-        "symfony/console": "^5.0",
-        "symfony/options-resolver": "^5.0"
+        "jackal/video-downloader": "dev-master"
     }
 }
