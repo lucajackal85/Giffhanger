@@ -14,7 +14,8 @@ $giffhanger->generateVideo('/path/to/output.avi');
 ```
 
 ## Options
-- **output_dimension**: the width (in pixels) of the output file [default: **320**]
+- **resize_width**: resize width (in pixels) of the output file [default: **640**]
+- **crop_ratio**: crop the video following the value passed [default crop is not applied]
 - **temp_dir**: define the temp directory used to generate the output file [default is **system temp directory**]
 - **frames**: number of "pieces" taken to build the preview [default is **3**]
 - **duration**: duration (in seconds) of the preview [default is **6**]

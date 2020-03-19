@@ -7,6 +7,7 @@ namespace Jackal\Giffhanger\Generator;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use Jackal\Giffhanger\FFMpeg\ext\Media\Gif;
 
 class GifGenerator extends VideoMP4Generator
 {
@@ -19,10 +20,9 @@ class GifGenerator extends VideoMP4Generator
         $ffmpeg = FFMpeg::create();
         $video = $ffmpeg->open($this->destination);
 
-        $video
-            ->gif(
-                TimeCode::fromSeconds(0),
-                new Dimension($this->getDimensionWidth(), $this->getDimensionWidth() / $this->getRatio()), $this->getDuration()
-            )->save($originalDestionation);
+        $gif = new Gif($video,$video->getFFMpegDriver(),$video->getFFProbe(),TimeCode::fromSeconds(0),
+            new Dimension($this->getDimensionWidth(), $this->getDimensionWidth() / $this->getRatio()), $this->getDuration());
+
+        $gif->save($originalDestionation);
     }
 }

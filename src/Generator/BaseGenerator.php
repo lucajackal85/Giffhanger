@@ -20,7 +20,8 @@ abstract class BaseGenerator implements GeneratorInterface
         $resolver = new OptionsResolver();
         $resolver->setDefaults([
             'temp_dir' => sys_get_temp_dir(),
-            'output_dimension' => 640,
+            'resize_width' => 640,
+            'crop_ratio' => null,
             'frames' => 3,
             'duration' => 6,
             'bitrate' => 600,
@@ -76,7 +77,7 @@ abstract class BaseGenerator implements GeneratorInterface
     }
 
     protected function getDimensionWidth(){
-        return $this->options['output_dimension'];
+        return $this->options['resize_width'];
     }
 
     protected function getNumberOfFrames(){
@@ -89,6 +90,10 @@ abstract class BaseGenerator implements GeneratorInterface
 
     protected function getVideoBitrate(){
         return $this->options['bitrate'];
+    }
+
+    protected function getCropRatio(){
+        return $this->options['crop_ratio'];
     }
 
     protected function getFrameRate(){

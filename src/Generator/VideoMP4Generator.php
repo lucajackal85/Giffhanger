@@ -9,6 +9,8 @@ use FFMpeg\Coordinate\FrameRate;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Format\Video\X264;
+use FFMpeg\Media\Video;
+use Jackal\Giffhanger\FFMpeg\ext\Filters\CropCenterFilter;
 
 class VideoMP4Generator extends BaseGenerator
 {
@@ -20,6 +22,8 @@ class VideoMP4Generator extends BaseGenerator
         $videoFormat->setPasses(1);
 
         $ffmpeg = FFMpeg::create();
+
+        /** @var Video $video */
         $video = $ffmpeg->open($this->sourceFile);
 
         $files = [];
@@ -41,16 +45,28 @@ class VideoMP4Generator extends BaseGenerator
 
         if(count($files) == 1) {
             rename($files[0],$this->destination);
-            return;
+        }else {
+            $video = $ffmpeg->open($files[0]);
+
+            if (is_file($this->destination)) {
+                unlink($this->destination);
+            }
+
+            $video
+                ->concat(array_slice($files, 0, count($files)))
+                ->saveFromSameCodecs($this->destination);
         }
 
-        $video = $ffmpeg->open($files[0]);
+        if($this->getCropRatio() and ($this->getCropRatio() != $this->getRatio())){
 
-        if (is_file($this->destination)) {
-            unlink($this->destination);
+            /** @var Video $video */
+            $ffmpeg = FFMpeg::create();
+
+            /** @var Video $video */
+            $video = $ffmpeg->open($this->destination);
+
+            $video->addFilter(new CropCenterFilter($this->getCropRatio()));
+            $video->save($videoFormat, $this->destination);
         }
-        $video
-            ->concat(array_slice($files, 0, count($files)))
-            ->saveFromSameCodecs($this->destination);
     }
 }
