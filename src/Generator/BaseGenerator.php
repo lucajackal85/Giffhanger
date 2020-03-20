@@ -4,7 +4,7 @@
 namespace Jackal\Giffhanger\Generator;
 
 use FFMpeg\FFMpeg;
-use Symfony\Component\OptionsResolver\OptionsResolver;
+use Jackal\Giffhanger\Configuration\Configuration;
 
 abstract class BaseGenerator implements GeneratorInterface
 {
@@ -15,25 +15,14 @@ abstract class BaseGenerator implements GeneratorInterface
     protected $options = [];
     private $tempFilesToRemove = [];
 
-    public function __construct($sourceFile, $destionationFile,$options = [])
+    public function __construct($sourceFile, $destionationFile,Configuration $options)
     {
-        $resolver = new OptionsResolver();
-        $resolver->setDefaults([
-            'temp_dir' => sys_get_temp_dir(),
-            'resize_width' => 640,
-            'crop_ratio' => null,
-            'frames' => 3,
-            'duration' => 6,
-            'bitrate' => 600,
-            'frame_rate' => 10
-        ]);
+        $this->options = $options;
 
-        $this->options = $resolver->resolve($options);
-
-        if(!is_dir($this->getTempFolder())){
-            if(!mkdir($this->getTempFolder(),0777,true)){
+        if(!is_dir($this->options->getTempFolder())){
+            if(!mkdir($this->options->getTempFolder(),0777,true)){
                 $this->__destruct();
-                throw new \Exception('Cannot create temp folder in path "'.$this->getTempFolder().'"');
+                throw new \Exception('Cannot create temp folder in path "'.$this->options->getTempFolder().'"');
             }
         }
 
@@ -41,8 +30,8 @@ abstract class BaseGenerator implements GeneratorInterface
         $this->destination = $destionationFile;
 
         $videoDuration = $this->getDuration();
-        for($i=1;$i<=$this->getNumberOfFrames();$i++){
-            $this->cutPoints[] = (($videoDuration / $this->getNumberOfFrames()) - ($videoDuration / $this->getNumberOfFrames() / 2)) * $i;
+        for($i=1;$i<=$this->options->getNumberOfFrames();$i++){
+            $this->cutPoints[] = (($videoDuration / $this->options->getNumberOfFrames()) - ($videoDuration / $this->options->getNumberOfFrames() / 2)) * $i;
         }
     }
 
@@ -65,38 +54,14 @@ abstract class BaseGenerator implements GeneratorInterface
             if(is_file($fileToRemove)){
                 unlink($fileToRemove);
             }
+            //if folder is empty, remove
+            if(is_dir(dirname($fileToRemove)) and count(scandir(dirname($fileToRemove))) == 2){
+                rmdir(dirname($fileToRemove));
+            }
         }
     }
 
     protected function addTempFileToRemove($filePath){
         $this->tempFilesToRemove[] = $filePath;
-    }
-
-    protected function getTempFolder(){
-        return $this->options['temp_dir'];
-    }
-
-    protected function getDimensionWidth(){
-        return $this->options['resize_width'];
-    }
-
-    protected function getNumberOfFrames(){
-        return $this->options['frames'];
-    }
-
-    protected function getOutputDuration(){
-        return $this->options['duration'];
-    }
-
-    protected function getVideoBitrate(){
-        return $this->options['bitrate'];
-    }
-
-    protected function getCropRatio(){
-        return $this->options['crop_ratio'];
-    }
-
-    protected function getFrameRate(){
-        return $this->options['frame_rate'];
     }
 }

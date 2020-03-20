@@ -13,7 +13,7 @@ class GifGenerator extends VideoMP4Generator
 {
     public function generate(){
         $originalDestionation = $this->destination;
-        $this->destination = $this->getTempFolder().'/'.md5($this->sourceFile).'-temp.avi';
+        $this->destination = $this->options->getTempFolder().'/'.md5($this->sourceFile).'-temp.avi';
         parent::generate();
         $this->addTempFileToRemove($this->destination);
 
@@ -21,7 +21,7 @@ class GifGenerator extends VideoMP4Generator
         $video = $ffmpeg->open($this->destination);
 
         $gif = new Gif($video,$video->getFFMpegDriver(),$video->getFFProbe(),TimeCode::fromSeconds(0),
-            new Dimension($this->getDimensionWidth(), $this->getDimensionWidth() / $this->getRatio()), $this->getDuration());
+            new Dimension($this->options->getDimensionWidth(), $this->options->getDimensionWidth() / $this->getRatio()), $this->getDuration());
 
         $gif->save($originalDestionation);
     }
