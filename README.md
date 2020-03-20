@@ -11,9 +11,11 @@ Minimal example
 $giffhanger = new Giffhanger('/path/to/video/file',[
     'output_dimension' => 320
 ]);
+//to generate gif
+$giffhanger->generate('/path/to/output.gif');
 
-$giffhanger->generateGIF('/path/to/output.gif');
-$giffhanger->generateVideo('/path/to/output.avi');
+//to generate video
+$giffhanger->generate('/path/to/output.avi');
 ```
 
 ## Options
