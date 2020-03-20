@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8ed3efcff973fbb4aa0385418ddcd197",
+    "content-hash": "1f6d392b6a31369e7c07147097946fc9",
     "packages": [
         {
             "name": "alchemy/binary-driver",
@@ -67,46 +67,6 @@
                 "driver"
             ],
             "time": "2020-02-12T19:35:11+00:00"
-        },
-        {
-            "name": "athlon1600/youtube-downloader",
-            "version": "v2.0.5",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/Athlon1600/youtube-downloader.git",
-                "reference": "d94f38a835d10750a31261cff289fc2aa3cb0112"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/Athlon1600/youtube-downloader/zipball/d94f38a835d10750a31261cff289fc2aa3cb0112",
-                "reference": "d94f38a835d10750a31261cff289fc2aa3cb0112",
-                "shasum": ""
-            },
-            "require": {
-                "ext-curl": "*",
-                "ext-json": "*",
-                "php": "^5.6 || ^7.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^5.7|6.2|^7.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "YouTube\\": "src/"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHP powered alternative for youtube-dl",
-            "keywords": [
-                "download youtube",
-                "download youtube videos",
-                "youtube downloader"
-            ],
-            "time": "2020-02-10T14:23:09+00:00"
         },
         {
             "name": "doctrine/cache",
@@ -232,42 +192,6 @@
                 "event-emitter"
             ],
             "time": "2017-07-23T21:35:13+00:00"
-        },
-        {
-            "name": "jackal/video-downloader",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "git@github.com:lucajackal85/Downloader.git",
-                "reference": "579612ee21a22b6049ccd1abf1cae7c29c725125"
-            },
-            "require": {
-                "athlon1600/youtube-downloader": "^2.0"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "^8.5"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "Jackal\\Downloader\\": "src/"
-                }
-            },
-            "autoload-dev": {
-                "psr-4": {
-                    "Jackal\\Downloader\\Tests\\": "tests/"
-                }
-            },
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Luca",
-                    "email": "luca.giacalone@edimotive.com"
-                }
-            ],
-            "time": "2020-03-18T08:36:54+00:00"
         },
         {
             "name": "neutron/temporary-filesystem",
@@ -655,9 +579,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "dev",
-    "stability-flags": {
-        "jackal/video-downloader": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

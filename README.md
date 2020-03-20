@@ -1,6 +1,7 @@
 ## Disclaimer: this library is in Alpha - not tested. Use it at your own risk!
 
 # Giffhanger
+#### (play on words: from ["Cliffhanger"](https://en.wikipedia.org/wiki/Cliffhanger))
 It generates Video previews in GIF or Video format.
 To use this library you need ffmpeg executable installed
 
