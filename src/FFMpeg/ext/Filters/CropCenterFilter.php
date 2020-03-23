@@ -7,14 +7,13 @@ use FFMpeg\Filters\Video\VideoFilterInterface;
 use FFMpeg\Format\VideoInterface;
 use FFMpeg\Media\Video;
 
-
 class CropCenterFilter implements VideoFilterInterface
 {
     protected $priority;
 
     protected $cropRatio;
 
-    public function __construct($cropRatio,$priority = 0)
+    public function __construct($cropRatio, $priority = 0)
     {
         $this->priority = $priority;
         $this->cropRatio = $cropRatio;
@@ -53,10 +52,10 @@ class CropCenterFilter implements VideoFilterInterface
             }
         }
 
-        if($this->cropRatio > $videoRatio){
+        if ($this->cropRatio > $videoRatio) {
             $cropWidth = $videoWidth;
             $cropHeight = round($videoWidth / $this->cropRatio);
-        }else{
+        } else {
             $cropHeight = $videoHeight;
             $cropWidth = round($videoHeight * $this->cropRatio);
         }

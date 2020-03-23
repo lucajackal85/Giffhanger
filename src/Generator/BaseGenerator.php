@@ -15,12 +15,12 @@ abstract class BaseGenerator implements GeneratorInterface
     protected $options = [];
     private $tempFilesToRemove = [];
 
-    public function __construct($sourceFile, $destionationFile,Configuration $options)
+    public function __construct($sourceFile, $destionationFile, Configuration $options)
     {
         $this->options = $options;
 
-        if(!is_dir($this->options->getTempFolder())){
-            if(!mkdir($this->options->getTempFolder(),0777,true)){
+        if (!is_dir($this->options->getTempFolder())) {
+            if (!mkdir($this->options->getTempFolder(), 0777, true)) {
                 $this->__destruct();
                 throw new \Exception('Cannot create temp folder in path "'.$this->options->getTempFolder().'"');
             }
@@ -30,19 +30,20 @@ abstract class BaseGenerator implements GeneratorInterface
         $this->destination = $destionationFile;
 
         $videoDuration = $this->getDuration();
-        for($i=1;$i<=$this->options->getNumberOfFrames();$i++){
+        for ($i=1;$i<=$this->options->getNumberOfFrames();$i++) {
             $this->cutPoints[] = (($videoDuration / $this->options->getNumberOfFrames()) - ($videoDuration / $this->options->getNumberOfFrames() / 2)) * $i;
         }
     }
 
-    protected function getDuration() : int {
+    protected function getDuration() : int
+    {
         $ffmpeg = FFMpeg::create();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
         return $ffmpeg->getFFProbe()->format($this->sourceFile)->get('duration');
     }
 
-    protected function getRatio(){
-
+    protected function getRatio()
+    {
         $ffmpeg = FFMpeg::create();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
         return $ffmpeg->getStreams()->first()->getDimensions()->getRatio()->getValue();
@@ -50,18 +51,19 @@ abstract class BaseGenerator implements GeneratorInterface
 
     public function __destruct()
     {
-        foreach (array_unique($this->tempFilesToRemove) as $fileToRemove){
-            if(is_file($fileToRemove)){
+        foreach (array_unique($this->tempFilesToRemove) as $fileToRemove) {
+            if (is_file($fileToRemove)) {
                 unlink($fileToRemove);
             }
             //if folder is empty, remove
-            if(is_dir(dirname($fileToRemove)) and count(scandir(dirname($fileToRemove))) == 2){
+            if (is_dir(dirname($fileToRemove)) and count(scandir(dirname($fileToRemove))) == 2) {
                 rmdir(dirname($fileToRemove));
             }
         }
     }
 
-    protected function addTempFileToRemove($filePath){
+    protected function addTempFileToRemove($filePath)
+    {
         $this->tempFilesToRemove[] = $filePath;
     }
 }

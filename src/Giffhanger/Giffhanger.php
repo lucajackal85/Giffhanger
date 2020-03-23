@@ -24,8 +24,9 @@ class Giffhanger
      * Giffhanger constructor.
      * @param $sourceVideoFile
      * @param array $config
+     * @throws \Jackal\Giffhanger\Exception\GiffhangerConfigurationException
      */
-    public function __construct($sourceVideoFile,$config = [])
+    public function __construct($sourceVideoFile, $config = [])
     {
         $this->videoFile = $sourceVideoFile;
 
@@ -44,9 +45,10 @@ class Giffhanger
      * @param $destinationFile
      * @throws GiffhangerException
      */
-    public function generate($destinationFile){
+    public function generate($destinationFile)
+    {
         $ext = strtolower(pathinfo($destinationFile, PATHINFO_EXTENSION));
-        switch ($ext){
+        switch ($ext) {
             case 'gif':
                 $this->generateGIF($destinationFile);
                 break;
@@ -63,9 +65,9 @@ class Giffhanger
      * @param $destinationGIFFile
      * @throws \Exception
      */
-    protected function generateGIF($destinationGIFFile){
-
-        $generator = new GifGenerator($this->videoFile,$destinationGIFFile,$this->config);
+    protected function generateGIF($destinationGIFFile)
+    {
+        $generator = new GifGenerator($this->videoFile, $destinationGIFFile, $this->config);
         $generator->generate();
     }
 
@@ -73,10 +75,9 @@ class Giffhanger
      * @param $destinationVideoFile
      * @throws \Exception
      */
-    protected function generateVideo($destinationVideoFile){
-        $generator = new VideoMP4Generator($this->videoFile,$destinationVideoFile,$this->config);
+    protected function generateVideo($destinationVideoFile)
+    {
+        $generator = new VideoMP4Generator($this->videoFile, $destinationVideoFile, $this->config);
         $generator->generate();
     }
-
-
 }

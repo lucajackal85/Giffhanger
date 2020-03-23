@@ -24,7 +24,7 @@ class Gif extends \FFMpeg\Media\Gif
 
     public function __construct(Video $video, FFMpegDriver $driver, FFProbe $ffprobe, TimeCode $timecode, Dimension $dimension, $duration = null)
     {
-        parent::__construct($video, $driver, $ffprobe,$timecode,$dimension,$duration);
+        parent::__construct($video, $driver, $ffprobe, $timecode, $dimension, $duration);
         $this->timecode = $timecode;
         $this->dimension = $dimension;
         $this->duration = $duration;
@@ -49,7 +49,7 @@ class Gif extends \FFMpeg\Media\Gif
             '-ss', (string)$this->timecode
         );
 
-        if(null !== $this->duration) {
+        if (null !== $this->duration) {
             $commands[] = '-t';
             $commands[] = (string)$this->duration;
         }

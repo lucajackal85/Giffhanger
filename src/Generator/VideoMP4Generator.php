@@ -3,11 +3,11 @@
 
 namespace Jackal\Giffhanger\Generator;
 
-
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\FrameRate;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use FFMpeg\Filters\Audio\SimpleFilter;
 use FFMpeg\Format\Video\X264;
 use FFMpeg\Media\Video;
 use Jackal\Giffhanger\FFMpeg\ext\Filters\CropCenterFilter;
@@ -17,16 +17,20 @@ class VideoMP4Generator extends BaseGenerator
     /**
      * @return FFMpeg
      */
-    protected function getFFMpeg(){
+    protected function getFFMpeg()
+    {
         return FFMpeg::create();
     }
 
     /**
      * @return X264
      */
-    protected function getVideoFormat(){
+    protected function getVideoFormat()
+    {
         $videoFormat = new X264();
-        $videoFormat->setKiloBitrate($this->options->getVideoBitrate());
+        if($this->options->getVideoBitrate()) {
+            $videoFormat->setKiloBitrate($this->options->getVideoBitrate());
+        }
         $videoFormat->setPasses(1);
 
         return $videoFormat;
@@ -41,9 +45,11 @@ class VideoMP4Generator extends BaseGenerator
         $video = $ffmpeg->open($this->sourceFile);
 
         $files = [];
-        foreach ($this->cutPoints as $k => $cutPoint){
-
+        foreach ($this->cutPoints as $k => $cutPoint) {
             $partFile = $this->options->getTempFolder().'/'.md5($this->sourceFile).'_'.($k+1).'.avi';
+
+            //remove audio track
+            $video->addFilter(new SimpleFilter(['-an']));
 
             $video->filters()->clip(
                 TimeCode::fromSeconds($cutPoint),
@@ -58,9 +64,9 @@ class VideoMP4Generator extends BaseGenerator
             $this->addTempFileToRemove($partFile);
         }
 
-        if(count($files) == 1) {
-            rename($files[0],$this->destination);
-        }else {
+        if (count($files) == 1) {
+            rename($files[0], $this->destination);
+        } else {
             /** @var Video $video */
             $video = $ffmpeg->open($files[0]);
 
@@ -73,13 +79,13 @@ class VideoMP4Generator extends BaseGenerator
                 ->saveFromSameCodecs($this->destination);
         }
 
-        if($this->options->getCropRatio() and ($this->options->getCropRatio() != $this->getRatio())){
+        if ($this->options->getCropRatio() and ($this->options->getCropRatio() != $this->getRatio())) {
             $fileCropped = $this->options->getTempFolder().'/'.md5($this->sourceFile).'_cropped.avi';
 
             $video = $ffmpeg->open($this->destination);
             $video->addFilter(new CropCenterFilter($this->options->getCropRatio()));
             $video->save($videoFormat, $fileCropped);
-            rename($fileCropped,$this->destination);
+            rename($fileCropped, $this->destination);
         }
     }
 }
