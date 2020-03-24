@@ -1,7 +1,6 @@
 {
     "name": "jackal/giffhanger",
     "type": "project",
-    "minimum-stability": "dev",
     "authors": [
         {
             "name": "Luca Giacalone",
@@ -13,17 +12,22 @@
             "Jackal\\Giffhanger\\": "src/"
         }
     },
+    "config": {
+        "platform": {
+            "php": "7.1"
+        }
+    },
     "autoload-dev": {
         "psr-4": {
             "Jackal\\Giffhanger\\Tests\\": "tests/"
         }
     },
     "require": {
-        "symfony/options-resolver": "^5.0",
+        "php": ">=7.1",
         "php-ffmpeg/php-ffmpeg": "^0.14.0"
     },
     "require-dev": {
-        "phpunit/phpunit": "8.5.x-dev",
-        "friendsofphp/php-cs-fixer": "^2.17@dev"
+        "phpunit/phpunit": "^7.5",
+        "friendsofphp/php-cs-fixer": "^2.16"
     }
 }
