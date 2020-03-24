@@ -8,7 +8,7 @@ use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use Jackal\Giffhanger\FFMpeg\ext\Media\Gif;
 
-class GifGenerator extends VideoMP4Generator
+class GifGenerator extends BaseGenerator
 {
     public function generate()
     {

@@ -11,11 +11,8 @@ abstract class BaseFFMpegFunctionalTest extends TestCase
 {
     protected function getVideoDuration($filePath){
         $ffprobe = \FFMpeg\FFProbe::create();
-        return $ffprobe
-            ->streams($filePath)
-            ->videos()
-            ->first()
-            ->get('duration');
+        return $ffprobe->format($filePath)
+        ->get('duration');
     }
 
     protected function getVideoWidth($filePath){

@@ -3,37 +3,25 @@
 
 namespace Jackal\Giffhanger\Generator;
 
+
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\FrameRate;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
 use FFMpeg\Filters\Audio\SimpleFilter;
-use FFMpeg\Format\Video\X264;
-use FFMpeg\Media\Video;
 use Jackal\Giffhanger\FFMpeg\ext\Filters\CropCenterFilter;
 
-class VideoMP4Generator extends BaseGenerator
+abstract class AbstractVideoGenerator extends BaseGenerator
 {
+
+    abstract protected function getVideoFormat();
+
     /**
      * @return FFMpeg
      */
     protected function getFFMpeg()
     {
         return FFMpeg::create();
-    }
-
-    /**
-     * @return X264
-     */
-    protected function getVideoFormat()
-    {
-        $videoFormat = new X264();
-        if($this->options->getVideoBitrate()) {
-            $videoFormat->setKiloBitrate($this->options->getVideoBitrate());
-        }
-        $videoFormat->setPasses(1);
-
-        return $videoFormat;
     }
 
     public function generate()

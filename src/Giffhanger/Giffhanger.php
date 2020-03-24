@@ -6,7 +6,9 @@ namespace Jackal\Giffhanger\Giffhanger;
 use Jackal\Giffhanger\Configuration\Configuration;
 use Jackal\Giffhanger\Exception\GiffhangerException;
 use Jackal\Giffhanger\Generator\GifGenerator;
-use Jackal\Giffhanger\Generator\VideoMP4Generator;
+use Jackal\Giffhanger\Generator\VideoH264Generator;
+use Jackal\Giffhanger\Generator\VideoOggGenerator;
+use Jackal\Giffhanger\Generator\VideoWebMGenerator;
 
 class Giffhanger
 {
@@ -50,34 +52,22 @@ class Giffhanger
         $ext = strtolower(pathinfo($destinationFile, PATHINFO_EXTENSION));
         switch ($ext) {
             case 'gif':
-                $this->generateGIF($destinationFile);
+                $generator = new GifGenerator($this->videoFile, $destinationFile, $this->config);
                 break;
             case 'avi':
             case 'mp4':
-                $this->generateVideo($destinationFile);
+                $generator = new VideoH264Generator($this->videoFile, $destinationFile, $this->config);
+                break;
+            case 'webm':
+                $generator = new VideoWebMGenerator($this->videoFile, $destinationFile, $this->config);
+                break;
+            case 'ogg':
+                $generator = new VideoOggGenerator($this->videoFile, $destinationFile, $this->config);
                 break;
             default:
                 throw GiffhangerException::invalidExtension($ext);
         }
-    }
 
-    /**
-     * @param $destinationGIFFile
-     * @throws \Exception
-     */
-    protected function generateGIF($destinationGIFFile)
-    {
-        $generator = new GifGenerator($this->videoFile, $destinationGIFFile, $this->config);
-        $generator->generate();
-    }
-
-    /**
-     * @param $destinationVideoFile
-     * @throws \Exception
-     */
-    protected function generateVideo($destinationVideoFile)
-    {
-        $generator = new VideoMP4Generator($this->videoFile, $destinationVideoFile, $this->config);
         $generator->generate();
     }
 }
