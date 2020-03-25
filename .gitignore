@@ -1,6 +1,5 @@
 vendor
-videos
 .idea
-output
 index.php
-temp
+composer.lock
+.php_cs.cache

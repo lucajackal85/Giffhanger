@@ -3,8 +3,8 @@
 
 namespace Jackal\Giffhanger\Generator;
 
-
 use FFMpeg\Format\Video\Ogg;
+
 class VideoOggGenerator extends AbstractVideoGenerator
 {
     /**

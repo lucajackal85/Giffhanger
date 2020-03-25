@@ -13,7 +13,7 @@ class VideoH264Generator extends AbstractVideoGenerator
     protected function getVideoFormat()
     {
         $videoFormat = new X264();
-        if($this->options->getVideoBitrate()) {
+        if ($this->options->getVideoBitrate()) {
             $videoFormat->setKiloBitrate($this->options->getVideoBitrate());
         }
         $videoFormat->setPasses(1);

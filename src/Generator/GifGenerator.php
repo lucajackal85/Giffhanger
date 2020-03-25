@@ -6,18 +6,22 @@ namespace Jackal\Giffhanger\Generator;
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\FFMpeg;
+use FFMpeg\Media\Video;
 use Jackal\Giffhanger\FFMpeg\ext\Media\Gif;
 
-class GifGenerator extends BaseGenerator
+class GifGenerator extends VideoWebMGenerator
 {
     public function generate()
     {
         $originalDestionation = $this->destination;
         $this->destination = $this->options->getTempFolder().'/'.md5($this->sourceFile).'-temp.avi';
+
         parent::generate();
+
         $this->addTempFileToRemove($this->destination);
 
-        $ffmpeg = FFMpeg::create();
+        $ffmpeg = $this->getFFMpeg();
+        /** @var Video $video */
         $video = $ffmpeg->open($this->destination);
 
         $gif = new Gif(

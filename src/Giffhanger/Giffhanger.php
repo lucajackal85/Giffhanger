@@ -24,7 +24,7 @@ class Giffhanger
 
     /**
      * Giffhanger constructor.
-     * @param $sourceVideoFile
+     * @param string $sourceVideoFile
      * @param array $config
      * @throws \Jackal\Giffhanger\Exception\GiffhangerConfigurationException
      */
@@ -44,7 +44,7 @@ class Giffhanger
     }
 
     /**
-     * @param $destinationFile
+     * @param string $destinationFile
      * @throws GiffhangerException
      */
     public function generate($destinationFile)
