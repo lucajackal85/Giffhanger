@@ -31,7 +31,9 @@ class Configuration
             'frames' => 3,
             'duration' => 6,
             'bitrate' => 600,
-            'frame_rate' => 10
+            'frame_rate' => 10,
+            'ffmpeg.binaries'  => '/usr/bin/ffmpeg',
+            'ffprobe.binaries' => '/usr/bin/ffprobe',
         ]);
 
         try {
@@ -80,5 +82,13 @@ class Configuration
 
     public function getFrameRate(){
         return $this->configuration['frame_rate'];
+    }
+
+    public function getFFMpegBinaries(){
+        return $this->configuration['ffmpeg.binaries'];
+    }
+
+    public function getFFProbeBinaries(){
+        return $this->configuration['ffprobe.binaries'];
     }
 }

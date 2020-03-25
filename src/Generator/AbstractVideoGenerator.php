@@ -16,14 +16,6 @@ abstract class AbstractVideoGenerator extends BaseGenerator
 
     abstract protected function getVideoFormat();
 
-    /**
-     * @return FFMpeg
-     */
-    protected function getFFMpeg()
-    {
-        return FFMpeg::create();
-    }
-
     public function generate()
     {
         $ffmpeg = $this->getFFMpeg();

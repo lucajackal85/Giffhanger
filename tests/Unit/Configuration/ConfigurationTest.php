@@ -25,7 +25,7 @@ class ConfigurationTest extends TestCase
     public function testRaiseExceptionOnInvalidOption(){
 
         $this->expectException(GiffhangerConfigurationException::class);
-        $this->expectExceptionMessage('The option "invalid" does not exist. Defined options are: "bitrate", "crop_ratio", "duration", "frame_rate", "frames", "resize_width", "temp_dir".');
+        $this->expectExceptionMessage('The option "invalid" does not exist. Defined options are: "bitrate", "crop_ratio", "duration", "ffmpeg.binaries", "ffprobe.binaries", "frame_rate", "frames", "resize_width", "temp_dir".');
 
         $conf = new Configuration([
             'invalid' => 1

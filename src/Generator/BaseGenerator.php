@@ -35,16 +35,29 @@ abstract class BaseGenerator implements GeneratorInterface
         }
     }
 
+
+    /**
+     * @return FFMpeg
+     */
+    protected function getFFMpeg()
+    {
+        return FFMpeg::create([
+            'ffmpeg.binaries'  => $this->options->getFFMpegBinaries(),
+            'ffprobe.binaries' => $this->options->getFFProbeBinaries(),
+            'timeout' => 3600,
+        ]);
+    }
+
     protected function getDuration() : int
     {
-        $ffmpeg = FFMpeg::create();
+        $ffmpeg = $this->getFFMpeg();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
         return $ffmpeg->getFFProbe()->format($this->sourceFile)->get('duration');
     }
 
     protected function getRatio()
     {
-        $ffmpeg = FFMpeg::create();
+        $ffmpeg = $this->getFFMpeg();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
         return $ffmpeg->getStreams()->first()->getDimensions()->getRatio()->getValue();
     }
