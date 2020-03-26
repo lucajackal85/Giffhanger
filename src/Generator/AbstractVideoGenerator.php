@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Generator;
 
 use FFMpeg\Coordinate\Dimension;
@@ -30,7 +29,8 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
         if (!is_dir($this->options->getTempFolder())) {
             if (!mkdir($this->options->getTempFolder(), 0777, true)) {
                 $this->__destruct();
-                throw new \Exception('Cannot create temp folder in path "'.$this->options->getTempFolder().'"');
+
+                throw new \Exception('Cannot create temp folder in path "' . $this->options->getTempFolder() . '"');
             }
         }
 
@@ -38,19 +38,18 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
         $this->destination = $destionationFile;
 
         $videoDuration = $this->getDuration();
-        for ($i=1;$i<=$this->options->getNumberOfFrames();$i++) {
+        for ($i = 1;$i <= $this->options->getNumberOfFrames();$i++) {
             $this->cutPoints[] = (($videoDuration / $this->options->getNumberOfFrames()) - ($videoDuration / $this->options->getNumberOfFrames() / 2)) * $i;
         }
     }
 
-
     /**
      * @return FFMpeg
      */
-    protected function getFFMpeg()
+    protected function getFFMpeg() : FFMpeg
     {
         return FFMpeg::create([
-            'ffmpeg.binaries'  => $this->options->getFFMpegBinaries(),
+            'ffmpeg.binaries' => $this->options->getFFMpegBinaries(),
             'ffprobe.binaries' => $this->options->getFFProbeBinaries(),
             'timeout' => 3600,
         ]);
@@ -60,13 +59,15 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
     {
         $ffmpeg = $this->getFFMpeg();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
+
         return $ffmpeg->getFFProbe()->format($this->sourceFile)->get('duration');
     }
 
-    protected function getRatio()
+    protected function getRatio() : float
     {
         $ffmpeg = $this->getFFMpeg();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
+
         return $ffmpeg->getStreams()->first()->getDimensions()->getRatio()->getValue();
     }
 
@@ -83,12 +84,12 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
         }
     }
 
-    protected function addTempFileToRemove($filePath)
+    protected function addTempFileToRemove($filePath) : void
     {
         $this->tempFilesToRemove[] = $filePath;
     }
 
-    public function generate()
+    public function generate() : void
     {
         $ffmpeg = $this->getFFMpeg();
         $videoFormat = $this->getVideoFormat();
@@ -98,7 +99,7 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
 
         $files = [];
         foreach ($this->cutPoints as $k => $cutPoint) {
-            $partFile = $this->options->getTempFolder().'/'.md5($this->sourceFile).'_'.($k+1).'.avi';
+            $partFile = $this->options->getTempFolder() . '/' . md5($this->sourceFile) . '_' . ($k + 1) . '.avi';
 
             //remove audio track
             $video->addFilter(new SimpleFilter(['-an']));
@@ -110,8 +111,8 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
 
             $video->filters()->resize(
                 new Dimension(
-                    (int)round($this->options->getDimensionWidth()),
-                    (int)round($this->options->getDimensionWidth() / $this->getRatio())
+                    (int) round($this->options->getDimensionWidth()),
+                    (int) round($this->options->getDimensionWidth() / $this->getRatio())
                 )
             );
             $video->filters()->framerate(new FrameRate($this->options->getFrameRate()), 1);
@@ -137,7 +138,7 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
         }
 
         if ($this->options->getCropRatio() and ($this->options->getCropRatio() != $this->getRatio())) {
-            $fileCropped = $this->options->getTempFolder().'/'.md5($this->sourceFile).'_cropped.avi';
+            $fileCropped = $this->options->getTempFolder() . '/' . md5($this->sourceFile) . '_cropped.avi';
 
             $video = $ffmpeg->open($this->destination);
             $video->addFilter(new CropCenterFilter($this->options->getCropRatio()));

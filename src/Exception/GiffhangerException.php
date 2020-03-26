@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Exception;
 
 class GiffhangerException extends \Exception

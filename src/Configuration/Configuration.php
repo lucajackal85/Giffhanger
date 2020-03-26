@@ -1,10 +1,8 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Configuration;
 
 use Jackal\Giffhanger\Exception\GiffhangerConfigurationException;
-use Jackal\Giffhanger\Exception\GiffhangerException;
 use Symfony\Component\OptionsResolver\Exception\UndefinedOptionsException;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -31,7 +29,7 @@ class Configuration
             'duration' => 6,
             'bitrate' => 600,
             'frame_rate' => 10,
-            'ffmpeg.binaries'  => '/usr/bin/ffmpeg',
+            'ffmpeg.binaries' => '/usr/bin/ffmpeg',
             'ffprobe.binaries' => '/usr/bin/ffprobe',
         ]);
 
@@ -48,14 +46,14 @@ class Configuration
         }
     }
 
-    protected function assertPositiveIntegerNumber($value)
+    protected function assertPositiveIntegerNumber($value) : void
     {
         if (!is_numeric($value) or $value < 0) {
             throw GiffhangerConfigurationException::invalidPositiveIntegerValue($value);
         }
     }
 
-    public function getTempFolder()
+    public function getTempFolder() : string
     {
         return $this->configuration['temp_dir'];
     }
@@ -65,17 +63,17 @@ class Configuration
         return $this->configuration['resize_width'];
     }
 
-    public function getNumberOfFrames()
+    public function getNumberOfFrames() : int
     {
-        return $this->configuration['frames'];
+        return (int) $this->configuration['frames'];
     }
 
-    public function getOutputDuration()
+    public function getOutputDuration() : string
     {
         return $this->configuration['duration'];
     }
 
-    public function getVideoBitrate()
+    public function getVideoBitrate() : string
     {
         return $this->configuration['bitrate'];
     }
@@ -85,17 +83,17 @@ class Configuration
         return $this->configuration['crop_ratio'];
     }
 
-    public function getFrameRate()
+    public function getFrameRate() : int
     {
-        return $this->configuration['frame_rate'];
+        return (int) $this->configuration['frame_rate'];
     }
 
-    public function getFFMpegBinaries()
+    public function getFFMpegBinaries() : string
     {
         return $this->configuration['ffmpeg.binaries'];
     }
 
-    public function getFFProbeBinaries()
+    public function getFFProbeBinaries() : string
     {
         return $this->configuration['ffprobe.binaries'];
     }

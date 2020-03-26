@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\FFMpeg\ext\Media;
 
 use Alchemy\BinaryDriver\Exception\ExecutionFailureException;
@@ -45,13 +44,13 @@ class Gif extends \FFMpeg\Media\Gif
         /**
          * @see http://ffmpeg.org/ffmpeg.html#Main-options
          */
-        $commands = array(
-            '-ss', (string)$this->timecode
-        );
+        $commands = [
+            '-ss', (string) $this->timecode,
+        ];
 
         if (null !== $this->duration) {
             $commands[] = '-t';
-            $commands[] = (string)$this->duration;
+            $commands[] = (string) $this->duration;
         }
 
         $commands[] = '-i';
@@ -66,12 +65,13 @@ class Gif extends \FFMpeg\Media\Gif
             $commands = array_merge($commands, $filter->apply($this));
         }
 
-        $commands = array_merge($commands, array($pathfile));
+        $commands = array_merge($commands, [$pathfile]);
 
         try {
             $this->driver->command($commands);
         } catch (ExecutionFailureException $e) {
             $this->cleanupTemporaryFile($pathfile);
+
             throw new RuntimeException('Unable to save gif', $e->getCode(), $e);
         }
 

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Generator;
 
 use FFMpeg\Format\Video\Ogg;
@@ -10,7 +9,7 @@ class VideoOggGenerator extends AbstractVideoGenerator
     /**
      * @return Ogg
      */
-    protected function getVideoFormat()
+    protected function getVideoFormat() : Ogg
     {
         $videoFormat = new Ogg();
         if ($this->options->getVideoBitrate()) {

@@ -1,20 +1,18 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Generator;
 
 use FFMpeg\Coordinate\Dimension;
 use FFMpeg\Coordinate\TimeCode;
-use FFMpeg\FFMpeg;
 use FFMpeg\Media\Video;
 use Jackal\Giffhanger\FFMpeg\ext\Media\Gif;
 
 class GifGenerator extends VideoWebMGenerator
 {
-    public function generate()
+    public function generate() : void
     {
         $originalDestionation = $this->destination;
-        $this->destination = $this->options->getTempFolder().'/'.md5($this->sourceFile).'-temp.avi';
+        $this->destination = $this->options->getTempFolder() . '/' . md5($this->sourceFile) . '-temp.avi';
 
         parent::generate();
 

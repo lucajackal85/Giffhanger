@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\FFMpeg\ext\Filters;
 
 use FFMpeg\Filters\Video\VideoFilterInterface;
@@ -48,6 +47,7 @@ class CropCenterFilter implements VideoFilterInterface
                 $videoWidth = $stream->get('width');
                 $videoHeight = $stream->get('height');
                 $videoRatio = $videoWidth / $videoHeight;
+
                 break;
             }
         }
@@ -63,7 +63,6 @@ class CropCenterFilter implements VideoFilterInterface
         $cropX = round(($videoWidth - $cropWidth) / 2);
         $cropY = round(($videoHeight - $cropHeight) / 2);
 
-
         foreach ($video->getStreams()->videos() as $stream) {
             if ($stream->has('width') && $stream->has('height')) {
                 $stream->set('width', $cropWidth);
@@ -71,10 +70,10 @@ class CropCenterFilter implements VideoFilterInterface
             }
         }
 
-        return array(
+        return [
             '-filter:v',
             'crop=' .
-            $cropWidth .':' . $cropHeight . ':' . $cropX . ':' . $cropY
-        );
+            $cropWidth . ':' . $cropHeight . ':' . $cropX . ':' . $cropY,
+        ];
     }
 }

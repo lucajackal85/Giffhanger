@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Generator;
 
 use FFMpeg\Format\Video\WebM;
@@ -10,7 +9,7 @@ class VideoWebMGenerator extends AbstractVideoGenerator
     /**
      * @return WebM
      */
-    protected function getVideoFormat()
+    protected function getVideoFormat() : WebM
     {
         $videoFormat = new WebM();
         if ($this->options->getVideoBitrate()) {

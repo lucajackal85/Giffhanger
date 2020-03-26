@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Jackal\Giffhanger\Giffhanger;
 
 use Jackal\Giffhanger\Configuration\Configuration;
@@ -32,13 +31,13 @@ class Giffhanger
     {
         $this->videoFile = $sourceVideoFile;
 
-        $this->config  = new Configuration($config);
+        $this->config = new Configuration($config);
     }
 
     /**
      * @return Configuration
      */
-    public function getConfig()
+    public function getConfig() : Configuration
     {
         return $this->config;
     }
@@ -47,22 +46,26 @@ class Giffhanger
      * @param string $destinationFile
      * @throws GiffhangerException
      */
-    public function generate($destinationFile)
+    public function generate($destinationFile) : void
     {
         $ext = strtolower(pathinfo($destinationFile, PATHINFO_EXTENSION));
         switch ($ext) {
             case 'gif':
                 $generator = new GifGenerator($this->videoFile, $destinationFile, $this->config);
+
                 break;
             case 'avi':
             case 'mp4':
                 $generator = new VideoH264Generator($this->videoFile, $destinationFile, $this->config);
+
                 break;
             case 'webm':
                 $generator = new VideoWebMGenerator($this->videoFile, $destinationFile, $this->config);
+
                 break;
             case 'ogg':
                 $generator = new VideoOggGenerator($this->videoFile, $destinationFile, $this->config);
+
                 break;
             default:
                 throw GiffhangerException::invalidExtension($ext);
