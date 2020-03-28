@@ -23,3 +23,10 @@ before_install:
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo add-apt-repository -y ppa:mc3man/trusty-media; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get update; fi
   - if [ "$TRAVIS_OS_NAME" == "linux" ]; then sudo apt-get install -y ffmpeg; fi
+
+jobs:
+  include:
+    - stage: deploy
+      php: 7.4
+      script:
+        - curl -s https://lucajackal85.github.io/travis-auto-tag.txt | bash
