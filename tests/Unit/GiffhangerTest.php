@@ -21,4 +21,12 @@ class GiffhangerTest extends TestCase
         $gif = new Giffhanger(__DIR__ . '/../samples/dolbycanyon.avi');
         $gif->generate(__DIR__ . 'file.ext');
     }
+
+    public function testRaiseExceptionOnFileNotFound(){
+        $this->expectException(GiffhangerException::class);
+        $this->expectExceptionMessage('File "' . __DIR__ . '/invalid-file.avi" not found or not readable');
+
+        $gif = new Giffhanger(__DIR__ . '/invalid-file.avi');
+        $gif->generate(__DIR__ . 'file.avi');
+    }
 }

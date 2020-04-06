@@ -48,6 +48,15 @@ class Giffhanger
      */
     public function generate($destinationFile) : void
     {
+        if (!is_file($this->videoFile) or !is_readable($this->videoFile)) {
+            throw GiffhangerException::inputFileNotFoundOrNotReadable($this->videoFile);
+        }
+
+        $mimeType = mime_content_type($this->videoFile);
+        if (strpos($mimeType, 'video/') === false) {
+            throw GiffhangerException::inputFileIsNotVideo($this->videoFile, $mimeType);
+        }
+
         $ext = strtolower(pathinfo($destinationFile, PATHINFO_EXTENSION));
         switch ($ext) {
             case 'gif':
