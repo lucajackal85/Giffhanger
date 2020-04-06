@@ -2,6 +2,7 @@
 
 namespace Jackal\Giffhanger\Tests\Functional\Video;
 
+use Jackal\Giffhanger\Exception\GiffhangerException;
 use Jackal\Giffhanger\Giffhanger\Giffhanger;
 use Jackal\Giffhanger\Tests\Functional\BaseFFMpegFunctionalTest;
 
@@ -75,5 +76,25 @@ class GiffhagerFunctionalTest extends BaseFFMpegFunctionalTest
         $this->assertEquals(6, $this->getVideoDuration($this->fileOutput4));
         $this->assertEquals(640, $this->getVideoWidth($this->fileOutput4));
         $this->assertEquals(480, $this->getVideoHeight($this->fileOutput4));
+    }
+
+    public function testItRaiseExceptionOnInvalidVideoFile(){
+
+        $testFile = __DIR__.'/../../samples/not-a-video-file.txt';
+        $this->expectException(GiffhangerException::class);
+        $this->expectExceptionMessage('File "'.$testFile.'" is not a video file (actual mime-type: "text/plain")');
+
+        $gif = new Giffhanger($testFile);
+        $gif->generate($this->fileOutput1);
+    }
+
+    public function testItRaiseExceptionOnCorruptedVideoFile(){
+
+        $testFile = realpath(__DIR__.'/../../samples/corrupted.avi');
+        $this->expectException(GiffhangerException::class);
+        $this->expectExceptionMessage('ffprobe failed to execute command \'/usr/bin/ffprobe\' \''.$testFile.'\' \'-show_streams\' \'-print_format\' \'json\'');
+
+        $gif = new Giffhanger($testFile);
+        $gif->generate($this->fileOutput1);
     }
 }
