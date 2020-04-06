@@ -122,8 +122,8 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
 
                 $video->filters()->resize(
                     new Dimension(
-                        (int)round($this->options->getDimensionWidth()),
-                        (int)round($this->options->getDimensionWidth() / $this->getRatio())
+                        (int) round($this->options->getDimensionWidth()),
+                        (int) round($this->options->getDimensionWidth() / $this->getRatio())
                     )
                 );
                 $video->filters()->framerate(new FrameRate($this->options->getFrameRate()), 1);
@@ -162,6 +162,7 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
             if ($e->getPrevious() instanceof ExecutionFailureException) {
                 $message = $e->getPrevious()->getMessage();
             }
+
             throw new GiffhangerException(sprintf('%s', $message));
         }
     }

@@ -80,9 +80,9 @@ class GiffhagerFunctionalTest extends BaseFFMpegFunctionalTest
 
     public function testItRaiseExceptionOnInvalidVideoFile(){
 
-        $testFile = __DIR__.'/../../samples/not-a-video-file.txt';
+        $testFile = __DIR__ . '/../../samples/not-a-video-file.txt';
         $this->expectException(GiffhangerException::class);
-        $this->expectExceptionMessage('File "'.$testFile.'" is not a video file (actual mime-type: "text/plain")');
+        $this->expectExceptionMessage('File "' . $testFile . '" is not a video file (actual mime-type: "text/plain")');
 
         $gif = new Giffhanger($testFile);
         $gif->generate($this->fileOutput1);
@@ -90,9 +90,11 @@ class GiffhagerFunctionalTest extends BaseFFMpegFunctionalTest
 
     public function testItRaiseExceptionOnCorruptedVideoFile(){
 
-        $testFile = realpath(__DIR__.'/../../samples/corrupted.avi');
+        $testFile = realpath(__DIR__ . '/../../samples/corrupted.avi');
         $this->expectException(GiffhangerException::class);
-        $this->expectExceptionMessage('ffprobe failed to execute command \'/usr/bin/ffprobe\' \''.$testFile.'\' \'-show_streams\' \'-print_format\' \'json\'');
+        $this->expectExceptionMessage('ffprobe failed to execute command \'/usr/bin/ffprobe\' \'' . $testFile . '\' \'-show_streams\' \'-print_format\' \'json\'');
+
+
 
         $gif = new Giffhanger($testFile);
         $gif->generate($this->fileOutput1);

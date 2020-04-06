@@ -24,7 +24,7 @@ class GiffhangerTest extends TestCase
 
     public function testRaiseExceptionOnFileNotFound(){
         $this->expectException(GiffhangerException::class);
-        $this->expectExceptionMessage('File "'.__DIR__ . '/invalid-file.avi" not found or not readable');
+        $this->expectExceptionMessage('File "' . __DIR__ . '/invalid-file.avi" not found or not readable');
 
         $gif = new Giffhanger(__DIR__ . '/invalid-file.avi');
         $gif->generate(__DIR__ . 'file.avi');

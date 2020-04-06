@@ -14,6 +14,7 @@ class GiffhangerException extends \Exception
         if (is_file($filePath)) {
             $filePath = realpath($filePath);
         }
+
         return new GiffhangerException(sprintf('File "%s" not found or not readable', $filePath));
     }
 
