@@ -76,7 +76,7 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
         $ffmpeg = $this->getFFMpeg();
         $ffmpeg = $ffmpeg->open($this->sourceFile);
 
-        return $ffmpeg->getStreams()->first()->getDimensions()->getRatio()->getValue();
+        return $ffmpeg->getStreams()->videos()->first()->getDimensions()->getRatio()->getValue();
     }
 
     public function __destruct()

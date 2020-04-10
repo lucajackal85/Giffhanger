@@ -94,8 +94,6 @@ class GiffhagerFunctionalTest extends BaseFFMpegFunctionalTest
         $this->expectException(GiffhangerException::class);
         $this->expectExceptionMessage('ffprobe failed to execute command \'/usr/bin/ffprobe\' \'' . $testFile . '\' \'-show_streams\' \'-print_format\' \'json\'');
 
-
-
         $gif = new Giffhanger($testFile);
         $gif->generate($this->fileOutput1);
     }
