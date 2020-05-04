@@ -9,18 +9,24 @@ use Jackal\Giffhanger\Tests\Functional\BaseFFMpegFunctionalTest;
 class GiffhagerFunctionalTest extends BaseFFMpegFunctionalTest
 {
     protected $fileInput1 = __DIR__ . '/../../samples/dolbycanyon.avi';
+    protected $fileInput2 = __DIR__ . '/../../samples/odd_dimention.avi';
 
     protected $fileOutput1 = __DIR__ . '/testCreateVideoDefault.avi';
     protected $fileOutput2 = __DIR__ . '/testCropVideo.mp4';
     protected $fileOutput3 = __DIR__ . '/testSinglePiece.ogg';
     protected $fileOutput4 = __DIR__ . '/testCreateVideoWebM.webm';
+    protected $fileOutput5 = __DIR__ . '/odd_dimention.avi';
 
     protected function tearDown(): void
     {
         parent::tearDown();
 
         $files = [
-            $this->fileOutput1,$this->fileOutput2,$this->fileOutput3,$this->fileOutput4,
+            $this->fileOutput1,
+            $this->fileOutput2,
+            $this->fileOutput3,
+            $this->fileOutput4,
+            $this->fileOutput5,
         ];
 
         foreach ($files as $file) {
@@ -96,5 +102,19 @@ class GiffhagerFunctionalTest extends BaseFFMpegFunctionalTest
 
         $gif = new Giffhanger($testFile);
         $gif->generate($this->fileOutput1);
+    }
+
+    public function testCreateVideoOddDimention(){
+
+        $gif = new Giffhanger($this->fileInput2, [
+            'resize_width' => 320,
+            'crop_ratio' => 16 / 9,
+        ]);
+        $gif->generate($this->fileOutput5);
+
+        $this->assertFileExists($this->fileOutput5);
+        $this->assertEquals(6, $this->getVideoDuration($this->fileOutput5));
+        $this->assertEquals(321, $this->getVideoWidth($this->fileOutput5));
+        $this->assertEquals(180, $this->getVideoHeight($this->fileOutput5));
     }
 }
