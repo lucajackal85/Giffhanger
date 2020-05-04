@@ -53,7 +53,7 @@ class Giffhanger
         }
 
         $mimeType = mime_content_type($this->videoFile);
-        if (strpos($mimeType, 'video/') === false) {
+        if (preg_match('/video\/(.*)|application\/octect-stream/', $mimeType) != 1) {
             throw GiffhangerException::inputFileIsNotVideo($this->videoFile, $mimeType);
         }
 

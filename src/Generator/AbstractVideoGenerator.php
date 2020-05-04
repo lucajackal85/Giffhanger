@@ -9,6 +9,9 @@ use FFMpeg\Coordinate\TimeCode;
 use FFMpeg\Exception\RuntimeException;
 use FFMpeg\FFMpeg;
 use FFMpeg\Filters\Audio\SimpleFilter;
+use FFMpeg\Filters\Video\ClipFilter;
+use FFMpeg\Filters\Video\FrameRateFilter;
+use FFMpeg\Filters\Video\ResizeFilter;
 use FFMpeg\Media\Video;
 use Jackal\Giffhanger\Configuration\Configuration;
 use Jackal\Giffhanger\Exception\GiffhangerException;
@@ -115,18 +118,20 @@ abstract class AbstractVideoGenerator implements GeneratorInterface
                 //remove audio track
                 $video->addFilter(new SimpleFilter(['-an']));
 
-                $video->filters()->clip(
+                $video->addFilter(new ClipFilter(
                     TimeCode::fromSeconds($cutPoint),
                     TimeCode::fromSeconds($this->options->getOutputDuration() / count($cutPoints))
-                );
+                ));
 
-                $video->filters()->resize(
-                    new Dimension(
-                        (int) round($this->options->getDimensionWidth()),
-                        (int) round($this->options->getDimensionWidth() / $this->getRatio())
-                    )
-                );
-                $video->filters()->framerate(new FrameRate($this->options->getFrameRate()), 1);
+                //FIX: https://stackoverflow.com/questions/20847674/ffmpeg-libx264-height-not-divisible-by-2
+                $width = (int) (ceil($this->options->getDimensionWidth() / 2) * 2);
+                $height = (int) (ceil($this->options->getDimensionWidth() / $this->getRatio() / 2) * 2);
+
+                $video->addFilter(new ResizeFilter(
+                    new Dimension($width, $height)
+                ));
+
+                $video->addFilter(new FrameRateFilter(new FrameRate($this->options->getFrameRate()), 1));
                 $video->save($videoFormat, $partFile);
 
                 $files[] = $partFile;
